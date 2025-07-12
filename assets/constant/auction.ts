@@ -6,6 +6,7 @@ import { images } from "../images"
 
 export const auction: AuctionItem[] = [
     {
+        id: '2',
         name: '2d art',
         image: images.DArt,
         category: "painting",
@@ -15,6 +16,7 @@ export const auction: AuctionItem[] = [
         timeLeft: 20000
     },
     {
+        id: '3',
         name: 'my new car',
         image: images.Car,
         category: "auto mobile",
@@ -24,6 +26,7 @@ export const auction: AuctionItem[] = [
         timeLeft: 150000
     },
     {
+        id: '1',
         name: 'hp laptop',
         image: images.Food,
         category: "computers",
@@ -33,6 +36,7 @@ export const auction: AuctionItem[] = [
         timeLeft: 2000000
     },
     {
+        id: '5',
         name: 'taiwo',
         image: images.Painting,
         category: "cloth",
@@ -42,6 +46,7 @@ export const auction: AuctionItem[] = [
         timeLeft: 2000
     },
     {
+        id: '10',
         name: 'gta V',
         image: images.Gta,
         category: "game",
@@ -51,6 +56,7 @@ export const auction: AuctionItem[] = [
         timeLeft: 2000
     },
     {
+        id: '1111',
         name: 'old house',
         image: images.House,
         category: "realEsate",
@@ -60,6 +66,7 @@ export const auction: AuctionItem[] = [
         timeLeft: 39000
     },
     {
+        id: '44243',
         name: 'frame for painting',
         image: images.Frame,
         category: "painting",

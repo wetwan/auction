@@ -4,6 +4,7 @@ export interface Category {
 }
 
 export interface AuctionItem {
+    id: string
     name: string
     image: string
     category: string

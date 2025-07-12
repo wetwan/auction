@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { AuctionItem, Category } from "@/types/type";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { auction, category } from "../assets/constant/auction";
@@ -10,6 +9,7 @@ type AuctionContextType = {
   categorys: Category[];
   SetCategorys: React.Dispatch<React.SetStateAction<Category[]>>;
   getCategorys: () => Promise<void>;
+  formatTime: (time: any) => string;
 };
 
 const AuctionContext = createContext<AuctionContextType | undefined>(undefined);
@@ -17,6 +17,29 @@ const AuctionContext = createContext<AuctionContextType | undefined>(undefined);
 export function AuctionProvider({ children }: { children: React.ReactNode }) {
   const [auctions, SetAuctions] = useState<AuctionItem[]>([]);
   const [categorys, SetCategorys] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      SetAuctions((prev) =>
+        prev.map((auction) => ({
+          ...auction,
+          timeLeft: auction.timeLeft > 0 ? auction.timeLeft - 1 : 0,
+        }))
+      );
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
+  const formatTime = (time: any) => {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
+
+    return `${hours.toString().padStart(2, "0")}h ${minutes
+      .toString()
+      .padStart(2, "0")}m ${seconds.toString().padStart(2, "0")}s`;
+  };
 
   const getAuctions = async () => {
     SetAuctions([]);
@@ -43,6 +66,7 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
         categorys,
         SetCategorys,
         getCategorys,
+        formatTime,
       }}
     >
       {children}

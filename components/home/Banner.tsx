@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { banners } from "@/assets/constant/auction";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, View } from "react-native";
@@ -14,7 +13,6 @@ const Banner = () => {
     setBanner(banners);
   };
   useEffect(() => {
-    console.log(banner);
     getBanner();
   }, []);
 
