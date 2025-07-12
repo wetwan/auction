@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Auction from "@/components/home/Auction";
+import Banner from "@/components/home/Banner";
 import Category from "@/components/home/Category";
 import Welocme from "@/components/home/welocme";
 import { useAuctionCreation } from "@/context/AuctionContex";
 import React, { useEffect } from "react";
-import { SafeAreaView } from "react-native";
+import { ScrollView } from "react-native";
 
 const Index = () => {
   const { auctions, SetAuctions } = useAuctionCreation();
@@ -23,11 +24,14 @@ const Index = () => {
   }, []);
 
   return (
-    <SafeAreaView>
-      <Welocme />
-      <Auction auctions={auctions} />
-      <Category />
-    </SafeAreaView>
+    <>
+      <ScrollView>
+        <Welocme />
+        <Auction auctions={auctions} />
+        <Category />
+        <Banner />
+      </ScrollView>
+    </>
   );
 };
 

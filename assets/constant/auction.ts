@@ -128,4 +128,4 @@ export const category: Category[] = [
     },
 ]
 
-export const banner =[ images.Brush, images.Frame, images.Funis, images.DArt]
+export const banners = [{ image: images.Brush, }, { image: images.Frame }, { image: images.Funis }, { image: images.DArt }]

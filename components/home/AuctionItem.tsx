@@ -9,7 +9,6 @@ interface AuctionItemProp {
 }
 
 const AuctionItems = ({ formatTime, auction }: AuctionItemProp) => {
-  const image = "https://via.placeholder.com/150"; // Placeholder image URL
   return (
     <View
       style={{

@@ -28,7 +28,6 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    console.log(auctions);
     getAuctions();
   }, []);
   useEffect(() => {
