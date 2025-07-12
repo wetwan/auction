@@ -127,3 +127,5 @@ export const category: Category[] = [
         image: images.DArt
     },
 ]
+
+export const banner =[ images.Brush, images.Frame, images.Funis, images.DArt]

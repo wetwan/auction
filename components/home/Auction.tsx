@@ -18,7 +18,6 @@ const Auction = ({ auctions }: AuctionProp) => {
       .toString()
       .padStart(2, "0")}m ${seconds.toString().padStart(2, "0")}s`;
   };
-  const image = "https://via.placeholder.com/150"; // Placeholder image URL
   const topFiveAuctions = auctions.slice(0, 5);
   return (
     <View>
