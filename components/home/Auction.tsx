@@ -1,4 +1,6 @@
+import { useAuctionCreation } from "@/context/AuctionContex";
 import { AuctionItem } from "@/types/type";
+import { useRouter } from "expo-router";
 import React from "react";
 import { FlatList, View } from "react-native";
 import Heading from "../Heading";
@@ -9,15 +11,9 @@ interface AuctionProp {
 }
 
 const Auction = ({ auctions }: AuctionProp) => {
-  const formatTime = (time: any) => {
-    const hours = Math.floor(time / 3600);
-    const minutes = Math.floor((time % 3600) / 60);
-    const seconds = time % 60;
+  const { formatTime } = useAuctionCreation();
+  const router = useRouter();
 
-    return `${hours.toString().padStart(2, "0")}h ${minutes
-      .toString()
-      .padStart(2, "0")}m ${seconds.toString().padStart(2, "0")}s`;
-  };
   const topFiveAuctions = auctions.slice(0, 5);
   return (
     <View>
@@ -25,7 +21,7 @@ const Auction = ({ auctions }: AuctionProp) => {
         subTitle="new auction"
         seemore={true}
         textstyle={{ fontSize: 20 }}
-        onPress={() => console.log("press see more")}
+        onPress={() => router.push("/(tabs)/auction")}
       />
       <FlatList
         horizontal

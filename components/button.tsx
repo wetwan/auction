@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontWeight: "bold",
+    fontFamily: "outfit-medium",
     fontSize: 16,
     textTransform: "capitalize",
   },

@@ -1,10 +1,13 @@
 import { useAuctionCreation } from "@/context/AuctionContex";
+import { useRouter } from "expo-router";
 import React from "react";
-import { FlatList, Image, Text, View } from "react-native";
+import { FlatList, Image, Pressable, Text, View } from "react-native";
 import Heading from "../Heading";
 
 const Category = () => {
   const { categorys } = useAuctionCreation();
+
+  const router = useRouter();
 
   const topsix = categorys.slice(0, 5);
   return (
@@ -13,14 +16,23 @@ const Category = () => {
         subTitle="category"
         seemore={true}
         textstyle={{ fontSize: 20 }}
-        onPress={() => console.log("press see more")}
+        onPress={() => router.push("/(category)/categories")}
       />
       <FlatList
-        numColumns={5}
+        horizontal
         data={topsix}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{ margin: 10 }}
         renderItem={({ item: category }) => (
-          <View style={{ margin: 5, padding: 10, alignItems: "center" }}>
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/(category)/[catId]",
+                params: { catId: category.name },
+              })
+            }
+            style={{ margin: 5, padding: 10, alignItems: "center" }}
+          >
             <Image
               source={category.image}
               style={{
@@ -33,7 +45,7 @@ const Category = () => {
             <Text style={{ fontFamily: "outfit", textTransform: "capitalize" }}>
               {category.name}
             </Text>
-          </View>
+          </Pressable>
         )}
       />
     </View>

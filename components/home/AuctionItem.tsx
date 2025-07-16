@@ -1,6 +1,7 @@
 import { AuctionItem } from "@/types/type";
+import { useRouter } from "expo-router";
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import Button from "../button";
 
 interface AuctionItemProp {
@@ -9,8 +10,9 @@ interface AuctionItemProp {
 }
 
 const AuctionItems = ({ formatTime, auction }: AuctionItemProp) => {
+  const router = useRouter();
   return (
-    <View
+    <Pressable
       style={{
         padding: 15,
         borderWidth: 1,
@@ -18,6 +20,12 @@ const AuctionItems = ({ formatTime, auction }: AuctionItemProp) => {
         margin: 10,
         backgroundColor: "#A2C570",
         borderRadius: 10,
+      }}
+      onPress={() => {
+        router.push({
+          pathname: "/(auction)/[auctionId]",
+          params: { auctionId: auction.id },
+        });
       }}
     >
       <Image
@@ -44,15 +52,18 @@ const AuctionItems = ({ formatTime, auction }: AuctionItemProp) => {
         >
           {auction.name}
         </Text>
+        <Text
+          style={{
+            color: "white",
+            fontFamily: "outfit",
+            textTransform: "capitalize",
+            fontSize: 14,
+          }}
+        >
+          posted by {auction.by}
+        </Text>
       </View>
-      <Button
-        title="Bid"
-        variant="white"
-        style={{ borderColor: "#A2C570" }}
-        textStyle={{ color: " #A2C570" }}
-        onPress={() => console.log("press Bid")}
-      />
-    </View>
+    </Pressable>
   );
 };
 

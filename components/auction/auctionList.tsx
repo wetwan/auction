@@ -1,7 +1,8 @@
 import { useAuctionCreation } from "@/context/AuctionContex";
 import { AuctionItem } from "@/types/type";
 import React from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, View } from "react-native";
+import Empty from "../empty";
 import AuctionItems from "../home/AuctionItem";
 
 interface AuctionListProps {
@@ -11,20 +12,7 @@ interface AuctionListProps {
 const AuctionList = ({ filteredAuction }: AuctionListProps) => {
   const { formatTime } = useAuctionCreation();
   if (filteredAuction.length === 0) {
-    return (
-      <View
-        style={{
-          paddingTop: 250,
-          alignItems: "center",
-          justifyContent: "center",
-          flex: 1,
-        }}
-      >
-        <Text style={{ fontFamily: "outfit", fontSize: 20 }}>
-          No auctions found
-        </Text>
-      </View>
-    );
+    return <Empty />;
   }
   return (
     <View>
@@ -33,8 +21,9 @@ const AuctionList = ({ filteredAuction }: AuctionListProps) => {
         keyExtractor={(item, i) => i.toString()}
         numColumns={2}
         contentContainerStyle={{
+          paddingTop: 20,
           paddingHorizontal: 10,
-          paddingBottom: 20,
+          paddingBottom: 160,
         }}
         renderItem={({ item }) => (
           <View>

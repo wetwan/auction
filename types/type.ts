@@ -1,10 +1,12 @@
 export interface Category {
     name: string
     image: string
+    label: string
+    value: string
 }
 
 export interface AuctionItem {
-    id: string
+    id?: string
     name: string
     image: string
     category: string
@@ -12,4 +14,5 @@ export interface AuctionItem {
     estimatedPrice: string
     description: string
     timeLeft: number
+    by: string
 }

@@ -38,7 +38,7 @@ const Heading = ({
       </Text>
       {seemore && (
         <Pressable onPress={onPress}>
-          <Text>See more</Text>
+          <Text style={{ fontFamily: "outfit" }}>See more</Text>
         </Pressable>
       )}
     </View>

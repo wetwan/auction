@@ -67,7 +67,7 @@ const LogIn = () => {
               backgroundColor: "#B6CA1B",
             }}
             textStyle={{ color: "#fff", fontSize: 18 }}
-            onPress={() => console.log("signin")}
+            onPress={() => router.replace("/(tabs)")}
           />
           <Button
             variant="ghost"
