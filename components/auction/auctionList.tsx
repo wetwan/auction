@@ -7,11 +7,17 @@ import AuctionItems from "../home/AuctionItem";
 
 interface AuctionListProps {
   filteredAuction: AuctionItem[];
+  fetchAuction: () => void;
+  islist: boolean;
 }
 
-const AuctionList = ({ filteredAuction }: AuctionListProps) => {
-  const { formatTime, getAuctions, loading } = useAuctionCreation();
-  if (filteredAuction.length === 0) {
+const AuctionList = ({
+  filteredAuction,
+  fetchAuction,
+  islist,
+}: AuctionListProps) => {
+  const { formatTime, loading } = useAuctionCreation();
+  if (filteredAuction.length === 0 && islist) {
     return <Empty />;
   }
   return (
@@ -28,7 +34,7 @@ const AuctionList = ({ filteredAuction }: AuctionListProps) => {
         keyExtractor={(item, i) => i.toString()}
         numColumns={2}
         refreshing={loading}
-        onRefresh={getAuctions}
+        onRefresh={fetchAuction}
         contentContainerStyle={{
           paddingTop: 20,
           paddingHorizontal: 10,

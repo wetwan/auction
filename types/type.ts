@@ -27,4 +27,5 @@ export interface AuctionItem {
   timeLeft: number;
   by: string;
   bids?: Bid[];
+  userId?: string
 }

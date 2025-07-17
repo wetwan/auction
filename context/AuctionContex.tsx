@@ -61,7 +61,6 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
       const quarySnapshot = await getDocs(q);
       quarySnapshot.forEach((doc) => {
         const data = doc.data();
-        console.log(data);
         const newItem: AuctionItem = {
           id: doc.id,
           name: data.name,

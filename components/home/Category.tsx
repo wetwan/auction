@@ -48,7 +48,7 @@ const Category = () => {
             </Text>
           </Pressable>
         )}
-        ListEmptyComponent={<Empty />}
+  
       />
     </View>
   );

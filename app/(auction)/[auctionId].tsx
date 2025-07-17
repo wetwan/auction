@@ -5,6 +5,7 @@ import Heading from "@/components/Heading";
 import { db } from "@/config/firebase";
 import { useAuctionCreation } from "@/context/AuctionContex";
 import { AuctionItem } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
@@ -27,6 +28,8 @@ const AuctionId = () => {
   const [bidding, setBidding] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { user } = useUser();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -62,6 +65,7 @@ const AuctionId = () => {
           description: data?.description,
           timeLeft: Number(data?.timeLeft),
           by: data?.by || "anonymous",
+          userId: data?.userId,
         };
 
         setAuction(newItem);
@@ -258,22 +262,24 @@ const AuctionId = () => {
         <Sucess setSuccess={setSuccess} auction={auction} />
       )}
 
-      <View
-        style={{
-          position: "absolute",
-          bottom: -150,
-          width: "80%",
-          left: 40,
-          elevation: 10,
-        }}
-      >
-        <Button
-          title="bid"
-          onPress={() => setBidding(true)}
-          style={{ backgroundColor: "#B6CA1B" }}
-          disabled={bidding}
-        />
-      </View>
+      {auction?.userId !== user?.id && (
+        <View
+          style={{
+            position: "absolute",
+            bottom: -150,
+            width: "80%",
+            left: 40,
+            elevation: 10,
+          }}
+        >
+          <Button
+            title="bid"
+            onPress={() => setBidding(true)}
+            style={{ backgroundColor: "#B6CA1B" }}
+            disabled={bidding}
+          />
+        </View>
+      )}
     </ScrollView>
   );
 };

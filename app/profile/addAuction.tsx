@@ -120,6 +120,7 @@ const AddAuction = () => {
         category,
         by: user?.firstName,
         createdAt: Timestamp.now(),
+        userId: user?.id,
       });
 
       router.push("/(tabs)/auction");

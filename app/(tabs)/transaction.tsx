@@ -22,8 +22,6 @@ const Transaction = () => {
   const { user } = useUser();
   const router = useRouter();
 
-  console.log(auction);
-
   const getUserBids = async () => {
     setLoading(true);
     try {
@@ -160,7 +158,7 @@ const Transaction = () => {
                   </View>
                 </Pressable>
               )}
-                  ListEmptyComponent={<Empty/>}
+              ListEmptyComponent={<Empty />}
             />
           )}
         </View>

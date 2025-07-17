@@ -1,4 +1,3 @@
-import { useAuctionCreation } from "@/context/AuctionContex";
 import { AuctionItem } from "@/types/type";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -11,7 +10,6 @@ interface AuctionItemProp {
 }
 
 const AuctionItems = ({ formatTime, auction }: AuctionItemProp) => {
-
   const router = useRouter();
   return (
     <Pressable
