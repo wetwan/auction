@@ -40,8 +40,6 @@ const Profile = () => {
   ];
   const router = useRouter();
   const { user } = useUser();
-
-  console.log(user);
   const { signOut } = useClerk();
   const handleSignOut = async () => {
     Alert.alert("Confirm Logout", "Are you sure you want to log out?", [

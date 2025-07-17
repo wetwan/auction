@@ -29,7 +29,7 @@ const AuctionItems = ({ formatTime, auction }: AuctionItemProp) => {
       }}
     >
       <Image
-        source={auction.image}
+        source={{ uri: auction.image }}
         style={{ height: 150, width: 150, borderRadius: 30 }}
       />
       <View>

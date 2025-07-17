@@ -1,6 +1,9 @@
+import { db } from "@/config/firebase";
 import { AuctionItem } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
+import { arrayUnion, doc, Timestamp, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Alert, Dimensions, StyleSheet, Text, View } from "react-native";
 import Button from "../button";
 import Input from "../input";
 
@@ -18,6 +21,35 @@ const BiddingButton = ({
 }: BiddingButtonProp) => {
   const { width } = Dimensions.get("window");
   const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { user } = useUser();
+
+  const addBid = async () => {
+    if (!auction?.id) {
+      Alert.alert("Food item ID is missing.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const docRef = doc(db, "auction", auction.id);
+      await updateDoc(docRef, {
+        reviews: arrayUnion({
+          bid: Number(value),
+          userName: user?.fullName,
+          time: Timestamp.now(),
+        }),
+      });
+
+      setBidding(false);
+      setValue("");
+      setLoading(false);
+      setSuccess(true);
+    } catch (error) {
+      Alert.alert(JSON.stringify(error));
+      console.log(error);
+    }
+  };
+
   return (
     <View
       style={{
@@ -40,7 +72,7 @@ const BiddingButton = ({
           styles.basicText,
           {
             textTransform: "capitalize",
-            fontFamily: " outfit-bold",
+            fontFamily: "outfit-bold",
             textAlign: "center",
             fontSize: 20,
             marginBlock: 20,
@@ -88,7 +120,7 @@ const BiddingButton = ({
         place your bid
       </Text>
       <Input
-        placeholder="enter your bid"
+        placeholder="Enter your bid"
         inputStyle={{
           borderWidth: 1,
           padding: 15,
@@ -117,16 +149,26 @@ const BiddingButton = ({
           onPress={() => setBidding(false)}
           variant="ghost"
         />
-        <Button
-          title="bid"
-          onPress={() => {
-            setSuccess(true);
-            setBidding(false);
-          }}
-          disabled={!value}
-          variant="block"
-          style={{ backgroundColor: "#B6CA1B", width: "60%" }}
-        />
+        {loading ? (
+          <Button
+            title="Bidding"
+            onPress={() => null}
+            disabled={loading}
+            variant="block"
+            style={{ backgroundColor: "#B6CaaB", width: "60%" }}
+          />
+        ) : (
+          <Button
+            title="bid"
+            onPress={addBid}
+            disabled={!value || loading}
+            variant="block"
+            style={{
+              backgroundColor: "#B6CA1B",
+              width: "60%",
+            }}
+          />
+        )}
       </View>
     </View>
   );

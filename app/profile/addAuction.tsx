@@ -2,12 +2,15 @@
 import Button from "@/components/button";
 import Welcome from "@/components/category/welcome";
 import Input from "@/components/input";
+import { db } from "@/config/firebase";
 import { useAuctionCreation } from "@/context/AuctionContex";
-import { AuctionItem } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Dimensions,
   Image,
   Pressable,
@@ -18,7 +21,7 @@ import {
 import RNPickerSelect from "react-native-picker-select";
 
 const AddAuction = () => {
-  const { formatTime, categorys, SetAuctions } = useAuctionCreation();
+  const { formatTime, categorys } = useAuctionCreation();
   const router = useRouter();
 
   const [inputDate, setInputDate] = useState<string>("");
@@ -32,6 +35,37 @@ const AddAuction = () => {
   const [estimatedPrice, setEstimatedPrice] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
+  const { user } = useUser();
+
+  const uploadToCloudinary = async (imageUri: string) => {
+    const data = new FormData();
+
+    data.append("file", {
+      uri: imageUri,
+      type: "image/jpeg", // or "image/png"
+      name: "upload.jpg",
+    } as any);
+    data.append("image", imageUri);
+    data.append("upload_preset", "martin");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dlu80k3sn/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const json = await res.json();
+      console.log("✅ Cloudinary upload success:", json);
+      return json.secure_url; // This is the URL of the uploaded image
+    } catch (err) {
+      console.error("❌ Cloudinary upload failed:", err);
+      return null;
+    }
+  };
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -44,8 +78,7 @@ const AddAuction = () => {
     }
   };
   const selectedDate = new Date(inputDate);
-
-  const createAuction = () => {
+  const createAuction = async () => {
     if (
       !name ||
       !description ||
@@ -55,9 +88,11 @@ const AddAuction = () => {
       !image ||
       !category
     ) {
-      return null;
+      Alert.alert("Please fill in all fields.");
+      return;
     }
 
+    const selectedDate = new Date(inputDate);
     if (selectedDate <= new Date()) {
       alert("Please select a future date and time");
       return;
@@ -67,23 +102,33 @@ const AddAuction = () => {
       (selectedDate.getTime() - new Date().getTime()) / 1000
     );
 
-    const data: AuctionItem = {
-      name,
-      description,
-      startingPrice,
-      estimatedPrice,
-      timeLeft: timeDiff,
-      image,
-      category,
-      by: "wetwan",
-      id: String(Math.floor(Math.random() * 3030392083208)),
-    };
+    try {
+      setLoading(true);
+      const uploadedImageUrl = await uploadToCloudinary(image);
+      if (!uploadedImageUrl) {
+        Alert.alert("Image upload failed.");
+        setLoading(false);
+        return;
+      }
+      await addDoc(collection(db, "auction"), {
+        name,
+        description,
+        startingPrice: Number(startingPrice),
+        estimatedPrice: Number(estimatedPrice),
+        timeLeft: timeDiff,
+        image: uploadedImageUrl,
+        category,
+        by: user?.firstName,
+        createdAt: Timestamp.now(),
+      });
 
-    // Optionally: setLoading(true);
-
-    SetAuctions((prev) => [...prev, data]);
-
-    router.push("/(tabs)/auction");
+      router.push("/(tabs)/auction");
+    } catch (error) {
+      console.error("Error creating auction:", error);
+      Alert.alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

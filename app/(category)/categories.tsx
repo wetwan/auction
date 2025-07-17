@@ -31,7 +31,7 @@ const Categories = () => {
             }}
           >
             <Image
-              source={category.image}
+              source={{ uri: category.image }}
               style={{
                 width: 80,
                 height: 80,

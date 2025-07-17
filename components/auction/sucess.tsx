@@ -1,4 +1,3 @@
-import { images } from "@/assets/images";
 import { AuctionItem } from "@/types/type";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -31,7 +30,7 @@ const Sucess = ({ setSuccess, auction }: BiddingButtonProp) => {
       }}
     >
       <Image
-        source={images.success}
+        source={require("../../assets/images/success.png")}
         style={{ width: 100, height: 100, marginHorizontal: "auto" }}
       />
       <Text
@@ -39,7 +38,7 @@ const Sucess = ({ setSuccess, auction }: BiddingButtonProp) => {
           styles.basicText,
           {
             textTransform: "capitalize",
-            fontFamily: " outfit-bold",
+            fontFamily: "outfit-bold",
             textAlign: "center",
             fontSize: 20,
             marginBlock: 10,
@@ -57,9 +56,11 @@ const Sucess = ({ setSuccess, auction }: BiddingButtonProp) => {
           textAlign: "center",
         }}
       >
-        You have successful bid on{" "}
-        <Text style={{ fontFamily: "outfit-bold" }}>item {auction.id} </Text>{" "}
-        name {""}
+        You have successful bid on
+        <Text style={{ fontFamily: "outfit-bold" }}>
+          item {auction.id}{" "}
+        </Text>{" "}
+        name
         {auction.name} posted by {auction.by}, if you win the bid you will be
         contacted.
       </Text>

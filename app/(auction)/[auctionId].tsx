@@ -1,14 +1,16 @@
-import { auction } from "@/assets/constant/auction";
 import BiddingButton from "@/components/auction/BiddingButton";
 import Sucess from "@/components/auction/sucess";
 import Button from "@/components/button";
 import Heading from "@/components/Heading";
+import { db } from "@/config/firebase";
 import { useAuctionCreation } from "@/context/AuctionContex";
 import { AuctionItem } from "@/types/type";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   Pressable,
   ScrollView,
@@ -21,13 +23,14 @@ const AuctionId = () => {
   const { auctionId } = useLocalSearchParams();
   const router = useRouter();
   const { formatTime } = useAuctionCreation();
-  const [auctions, setAuctions] = useState<AuctionItem>();
+  const [auction, setAuction] = useState<AuctionItem>();
   const [bidding, setBidding] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setAuctions((prev) =>
+      setAuction((prev) =>
         prev
           ? {
               ...prev,
@@ -42,23 +45,49 @@ const AuctionId = () => {
 
   useEffect(() => {
     const fetchAuction = async () => {
-      if (!auctionId) {
-        return null;
-      }
-      const data = auction?.find((doc) => doc?.id === auctionId);
-      if (data) {
-        setAuctions(data);
+      setLoading(true);
+      try {
+        const docRef = doc(db, "auction", auctionId as string);
+        const auction = await getDoc(docRef);
+
+        const data = auction.data();
+
+        const newItem: AuctionItem = {
+          id: auction?.id,
+          name: data?.name,
+          image: data?.image,
+          category: data?.category,
+          startingPrice: data?.startingPrice,
+          estimatedPrice: data?.estimatedPrice,
+          description: data?.description,
+          timeLeft: Number(data?.timeLeft),
+          by: data?.by || "anonymous",
+        };
+
+        setAuction(newItem);
+      } catch (error) {
+        console.log("error loading", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchAuction();
   }, [auctionId]);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#e74c3c" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: "white", position: "relative" }}
     >
       <Image
-        source={auctions?.image}
+        source={{ uri: auction?.image }}
         style={{ height: 400, width: "100%", objectFit: "cover" }}
       />
       <Pressable
@@ -99,21 +128,21 @@ const AuctionId = () => {
                 },
               ]}
             >
-              {auctions?.name}
+              {auction?.name}
             </Text>
             <Text style={[styles.basicText, { textTransform: "capitalize" }]}>
-              posted by {auctions?.by}
+              posted by {auction?.by}
             </Text>
           </View>
 
-          {auctions?.timeLeft > 0 && (
+          {typeof auction?.timeLeft === "number" && auction.timeLeft > 0 && (
             <Text
               style={[
                 styles.basicText,
                 { padding: 10, backgroundColor: "#B6CA1B", borderRadius: 5 },
               ]}
             >
-              {formatTime(auctions?.timeLeft)}
+              {formatTime(auction?.timeLeft)}
             </Text>
           )}
         </View>
@@ -140,7 +169,7 @@ const AuctionId = () => {
                 { fontSize: 20, textTransform: "capitalize" },
               ]}
             >
-              {auctions?.category}
+              {auction?.category}
             </Text>
           </View>
         </View>
@@ -174,7 +203,7 @@ const AuctionId = () => {
               { fontSize: 20, textTransform: "capitalize" },
             ]}
           >
-            $ {auctions?.estimatedPrice}
+            $ {auction?.estimatedPrice}
           </Text>
         </View>
         <View
@@ -206,7 +235,7 @@ const AuctionId = () => {
               { fontSize: 20, textTransform: "capitalize" },
             ]}
           >
-            $ {auctions?.startingPrice}
+            $ {auction?.startingPrice}
           </Text>
         </View>
         <Heading
@@ -214,18 +243,21 @@ const AuctionId = () => {
           textstyle={{ fontFamily: "outfit-bold", fontSize: 18, marginTop: 20 }}
         />
         <Text style={{ paddingInline: 13, fontFamily: "outfit-medium" }}>
-          {auctions?.description}.
+          {auction?.description}.
         </Text>
       </View>
       {bidding && (
         <BiddingButton
           bidding={bidding}
           setBidding={setBidding}
-          auction={auctions}
+          auction={auction}
           setSuccess={setSuccess}
         />
       )}
-      {success && <Sucess setSuccess={setSuccess} auction={auctions} />}
+      {success && auction && (
+        <Sucess setSuccess={setSuccess} auction={auction} />
+      )}
+
       <View
         style={{
           position: "absolute",

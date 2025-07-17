@@ -34,7 +34,7 @@ const Category = () => {
             style={{ margin: 5, padding: 10, alignItems: "center" }}
           >
             <Image
-              source={category.image}
+              source={{ uri: category.image }}
               style={{
                 width: 50,
                 height: 50,

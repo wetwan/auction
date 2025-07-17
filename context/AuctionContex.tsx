@@ -1,26 +1,30 @@
+import { db } from "@/config/firebase";
 import { AuctionItem, Category } from "@/types/type";
+import { collection, getDocs, query } from "firebase/firestore";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { auction, category } from "../assets/constant/auction";
 
 type AuctionContextType = {
   auctions: AuctionItem[];
-  SetAuctions: React.Dispatch<React.SetStateAction<AuctionItem[]>>;
+  setAuctions: React.Dispatch<React.SetStateAction<AuctionItem[]>>;
   getAuctions: () => Promise<void>;
   categorys: Category[];
-  SetCategorys: React.Dispatch<React.SetStateAction<Category[]>>;
+  setCategorys: React.Dispatch<React.SetStateAction<Category[]>>;
   getCategorys: () => Promise<void>;
   formatTime: (time: any) => string;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AuctionContext = createContext<AuctionContextType | undefined>(undefined);
 
 export function AuctionProvider({ children }: { children: React.ReactNode }) {
-  const [auctions, SetAuctions] = useState<AuctionItem[]>([]);
-  const [categorys, SetCategorys] = useState<Category[]>([]);
+  const [auctions, setAuctions] = useState<AuctionItem[]>([]);
+  const [categorys, setCategorys] = useState<Category[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      SetAuctions((prev) => {
+      setAuctions((prev) => {
         const updated = prev.map((auction) => ({
           ...auction,
           timeLeft: auction.timeLeft > 0 ? auction.timeLeft - 1 : 0,
@@ -47,10 +51,58 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
   };
 
   const getAuctions = async () => {
-    SetAuctions(auction);
+    setLoading(true);
+    setAuctions([]);
+    try {
+      const q = query(collection(db, "auction"));
+      const quarySnapshot = await getDocs(q);
+      quarySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        const newItem: AuctionItem = {
+          id: doc.id,
+          name: data.name,
+          image: data.image,
+          category: data.category,
+          startingPrice: data.startingPrice,
+          estimatedPrice: data.estimatedPrice,
+          description: data.description,
+          timeLeft: Number(data.timeLeft),
+          by: data.by || "anonymous",
+        };
+
+        setAuctions((prev) => [...prev, newItem]);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   const getCategorys = async () => {
-    SetCategorys(category);
+    setLoading(true);
+    setCategorys([]);
+    try {
+      const q = query(collection(db, "category"));
+      const quarySnapshot = await getDocs(q);
+      quarySnapshot.forEach((doc) => {
+        const data = doc.data();
+        setCategorys((prev) => [
+          ...prev,
+          {
+            id: doc.id,
+            name: data.name,
+            image: data.image,
+            label: data.name,
+            value: data.name,
+          },
+        ]);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -64,12 +116,14 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
     <AuctionContext.Provider
       value={{
         auctions,
-        SetAuctions,
+        setAuctions,
         getAuctions,
         categorys,
-        SetCategorys,
+        setCategorys,
         getCategorys,
         formatTime,
+        loading,
+        setLoading,
       }}
     >
       {children}

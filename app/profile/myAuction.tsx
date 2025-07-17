@@ -1,6 +1,7 @@
-import { auction } from "@/assets/constant/auction";
 import Welcome from "@/components/category/welcome";
+import { useAuctionCreation } from "@/context/AuctionContex";
 import { AuctionItem } from "@/types/type";
+import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -13,22 +14,15 @@ import {
 } from "react-native";
 
 const MyAuction = () => {
-  // const { auctions } = useAuctionCreation();
-  const [auctions, setAuction] = useState<AuctionItem[]>([]);
+  const { auctions } = useAuctionCreation();
+  // const [auctions, setAuction] = useState<AuctionItem[]>([]);
   const router = useRouter();
-
+  const { user } = useUser();
   const [myAuction, setMyAuction] = useState<AuctionItem[]>([]);
-  useEffect(() => {
-    const getAuction = async () => {
-      setAuction(auction);
-    };
-
-    getAuction();
-  }, [auctions]);
 
   useEffect(() => {
     const getMyAuction = async () => {
-      const datas = auctions.filter((d) => d.by === "ridwan");
+      const datas = auctions.filter((d) => d.by === user?.firstName);
       setMyAuction(datas);
     };
 
@@ -64,7 +58,10 @@ const MyAuction = () => {
                 });
               }}
             >
-              <Image source={item.image} style={{ width: 160, height: 150 }} />
+              <Image
+                source={{ uri: item.image }}
+                style={{ width: 160, height: 150 }}
+              />
               <View style={{ backgroundColor: "white", padding: 10 }}>
                 <Text style={[styles.basictext]}>{item.name}</Text>
                 <Text
