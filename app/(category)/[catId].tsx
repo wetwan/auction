@@ -26,9 +26,7 @@ const CatId = () => {
     fetchCategory();
   }, [catId]);
 
-  if (category.length === 0) {
-    return <Empty />;
-  }
+
   return (
     <View>
       <Welcome
@@ -92,6 +90,7 @@ const CatId = () => {
             </View>
           </Pressable>
         )}
+        ListEmptyComponent={<Empty />}
       />
     </View>
   );

@@ -1,4 +1,5 @@
 import Welcome from "@/components/category/welcome";
+import Empty from "@/components/empty";
 import { useAuctionCreation } from "@/context/AuctionContex";
 import { AuctionItem } from "@/types/type";
 import { useUser } from "@clerk/clerk-expo";
@@ -83,6 +84,7 @@ const MyAuction = () => {
               </View>
             </Pressable>
           )}
+              ListEmptyComponent={<Empty />}
         />
       </View>
     </View>

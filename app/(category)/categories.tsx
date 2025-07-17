@@ -1,4 +1,5 @@
 import Welcome from "@/components/category/welcome";
+import Empty from "@/components/empty";
 import { useAuctionCreation } from "@/context/AuctionContex";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -51,6 +52,7 @@ const Categories = () => {
             </Text>
           </Pressable>
         )}
+            ListEmptyComponent={<Empty />}
       />
     </View>
   );

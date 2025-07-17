@@ -12,7 +12,6 @@ const Empty = () => {
         alignItems: "center",
         justifyContent: "center",
         paddingHorizontal: 16,
-        backgroundColor: "#fff",
       }}
     >
       <Image

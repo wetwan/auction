@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
 import Heading from "../Heading";
+import Empty from "../empty";
 
 const Category = () => {
   const { categorys } = useAuctionCreation();
@@ -47,6 +48,7 @@ const Category = () => {
             </Text>
           </Pressable>
         )}
+        ListEmptyComponent={<Empty />}
       />
     </View>
   );

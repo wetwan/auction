@@ -36,7 +36,6 @@ const SignUp = () => {
     }
   };
 
-
   const onVerifyPress = async () => {
     if (!isLoaded) return;
 
@@ -71,6 +70,7 @@ const SignUp = () => {
             width: width * 0.8,
             marginInline: "auto",
           }}
+          keyboardType="numbers-and-punctuation"
           label="verification code"
           labelStye={{ marginInline: 10 }}
           inputStyle={{

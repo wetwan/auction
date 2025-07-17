@@ -5,6 +5,7 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import Heading from "../Heading";
 import AuctionItems from "./AuctionItem";
+import Empty from "../empty";
 
 interface AuctionProp {
   auctions: AuctionItem[];
@@ -30,6 +31,7 @@ const Auction = ({ auctions }: AuctionProp) => {
         renderItem={({ item: auction }) => (
           <AuctionItems formatTime={formatTime} auction={auction} />
         )}
+            ListEmptyComponent={<Empty />}
       />
     </View>
   );

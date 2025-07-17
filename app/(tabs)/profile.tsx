@@ -1,4 +1,5 @@
 import Button from "@/components/button";
+import Empty from "@/components/empty";
 import { useClerk, useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -23,7 +24,7 @@ const Profile = () => {
       id: 2,
       name: "View Auction",
       image: require("../../assets/images/viewlist.png"),
-      path: "/profile/myAuction",
+      path: "/profile/myAuction "as const,
     },
     {
       id: 3,
@@ -35,12 +36,19 @@ const Profile = () => {
       id: 4,
       name: "Log Out",
       image: require("../../assets/images/logoutapp.png"),
-      path: "",
+      path: "logout",
     },
   ];
   const router = useRouter();
   const { user } = useUser();
   const { signOut } = useClerk();
+
+  const menuClick = (item: any) => {
+    if (item.path === "logout") {
+      handleSignOut();
+    }
+    router.push(item.path);
+  };
   const handleSignOut = async () => {
     Alert.alert("Confirm Logout", "Are you sure you want to log out?", [
       { text: "Cancel", style: "cancel", onPress: () => {} },
@@ -100,7 +108,7 @@ const Profile = () => {
         style={{ margin: 20 }}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => router.push({ pathname: item.path })}
+            onPress={() => menuClick(item)}
             style={{
               flex: 1,
               backgroundColor: "white",
@@ -129,8 +137,9 @@ const Profile = () => {
             </Text>
           </TouchableOpacity>
         )}
+            ListEmptyComponent={<Empty />}
       />
-      <Button title="log out" onPress={handleSignOut} />
+    
     </View>
   );
 };

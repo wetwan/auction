@@ -1,4 +1,5 @@
 import Welcome from "@/components/category/welcome";
+import Empty from "@/components/empty";
 import { db } from "@/config/firebase";
 import { AuctionItem } from "@/types/type";
 import { useUser } from "@clerk/clerk-expo";
@@ -159,6 +160,7 @@ const Transaction = () => {
                   </View>
                 </Pressable>
               )}
+                  ListEmptyComponent={<Empty/>}
             />
           )}
         </View>

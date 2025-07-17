@@ -2,6 +2,7 @@ import { banners } from "@/assets/constant/auction";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, View } from "react-native";
 import Heading from "../Heading";
+import Empty from "../empty";
 
 interface bannerProp {
   image: string;
@@ -24,6 +25,7 @@ const Banner = () => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ margin: 10 }}
         data={banner}
+        ListEmptyComponent={<Empty />}
         renderItem={({ item: banner }) => (
           <View style={{ margin: 10 }}>
             <Image
