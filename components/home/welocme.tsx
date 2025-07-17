@@ -1,16 +1,12 @@
-import { images } from "@/assets/images";
+import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
-export const user = {
-  fullname: "adebayo ridwan",
-  firstname: "adebayo ",
-  lastname: "ridwan ",
-};
-
-const router = useRouter();
 const Welocme = () => {
+  const { user } = useUser();
+
+  const router = useRouter();
   return (
     <View
       style={{
@@ -25,7 +21,7 @@ const Welocme = () => {
       }}
     >
       <Image
-        source={images.Brush}
+        source={{ uri: user?.imageUrl }}
         style={{ height: 70, width: 70, borderRadius: 50 }}
       />
       <View
@@ -49,12 +45,12 @@ const Welocme = () => {
               textTransform: "capitalize",
             }}
           >
-            {user.firstname}
+            {user?.firstName}
           </Text>
         </View>
         <Pressable onPress={() => router.push("/(tabs)/profile")}>
           <Image
-            source={images.Brush}
+            source={{ uri: user?.imageUrl }}
             style={{ height: 70, width: 70, borderRadius: 50 }}
           />
         </Pressable>

@@ -1,8 +1,15 @@
-import { images } from "@/assets/images";
-import { user } from "@/components/home/welocme";
+import Button from "@/components/button";
+import { useClerk, useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import React from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const Profile = () => {
   const nav = [
@@ -31,8 +38,30 @@ const Profile = () => {
       path: "",
     },
   ];
-
   const router = useRouter();
+  const { user } = useUser();
+
+  console.log(user);
+  const { signOut } = useClerk();
+  const handleSignOut = async () => {
+    Alert.alert("Confirm Logout", "Are you sure you want to log out?", [
+      { text: "Cancel", style: "cancel", onPress: () => {} },
+      {
+        text: "Log Out",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await signOut();
+            router.push("/(auth)");
+          } catch (err) {
+            console.error(JSON.stringify(err, null, 2));
+          }
+        },
+      },
+    ]);
+    return;
+  };
+
   return (
     <View style={{}}>
       <View
@@ -47,7 +76,7 @@ const Profile = () => {
         }}
       >
         <Image
-          source={images.Painting}
+          source={{ uri: user?.imageUrl }}
           style={{
             width: 150,
             height: 150,
@@ -63,7 +92,7 @@ const Profile = () => {
             marginTop: 20,
           }}
         >
-          {user.fullname}
+          {user?.fullName}
         </Text>
       </View>
 
@@ -103,6 +132,7 @@ const Profile = () => {
           </TouchableOpacity>
         )}
       />
+      <Button title="log out" onPress={handleSignOut} />
     </View>
   );
 };

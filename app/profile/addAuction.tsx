@@ -80,7 +80,7 @@ const AddAuction = () => {
     };
 
     // Optionally: setLoading(true);
-    console.log("Auction created:", data);
+
     SetAuctions((prev) => [...prev, data]);
 
     router.push("/(tabs)/auction");

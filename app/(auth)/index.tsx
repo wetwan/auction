@@ -1,14 +1,37 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { useSignIn } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Dimensions, Text, View } from "react-native";
 
 const LogIn = () => {
+  const { signIn, setActive, isLoaded } = useSignIn();
+
   const { width } = Dimensions.get("window");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const onSignInPress = async () => {
+    if (!isLoaded) return;
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: email,
+        password,
+      });
+
+      if (signInAttempt.status === "complete") {
+        await setActive({ session: signInAttempt.createdSessionId });
+        router.replace("/(tabs)");
+      } else {
+        console.error(JSON.stringify(signInAttempt, null, 2));
+      }
+    } catch (err) {
+      console.error(JSON.stringify(err, null, 2));
+    }
+  };
+
   return (
     <View>
       <View style={{ marginTop: 150 }}>
@@ -67,7 +90,7 @@ const LogIn = () => {
               backgroundColor: "#B6CA1B",
             }}
             textStyle={{ color: "#fff", fontSize: 18 }}
-            onPress={() => router.replace("/(tabs)")}
+            onPress={onSignInPress}
           />
           <Button
             variant="ghost"

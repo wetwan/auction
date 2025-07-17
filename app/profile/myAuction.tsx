@@ -25,7 +25,7 @@ const MyAuction = () => {
 
     getAuction();
   }, [auctions]);
-  console.log(myAuction);
+
   useEffect(() => {
     const getMyAuction = async () => {
       const datas = auctions.filter((d) => d.by === "ridwan");
