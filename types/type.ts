@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Category {
   id?: string
   name: string
@@ -6,7 +8,15 @@ export interface Category {
   value: string
 }
 
-export type AuctionItem = {
+
+export interface Bid {
+  bid: number;
+  time: Timestamp;
+  userId: string;
+  userName: string;
+}
+
+export interface AuctionItem {
   id: string;
   name: string;
   image: string;
@@ -16,4 +26,5 @@ export type AuctionItem = {
   description: string;
   timeLeft: number;
   by: string;
-};
+  bids?: Bid[];
+}

@@ -33,8 +33,9 @@ const BiddingButton = ({
     try {
       const docRef = doc(db, "auction", auction.id);
       await updateDoc(docRef, {
-        reviews: arrayUnion({
+        bids: arrayUnion({
           bid: Number(value),
+          userId: user?.id,
           userName: user?.fullName,
           time: Timestamp.now(),
         }),

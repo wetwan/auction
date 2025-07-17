@@ -1,6 +1,6 @@
 import { db } from "@/config/firebase";
 import { AuctionItem, Category } from "@/types/type";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type AuctionContextType = {
@@ -54,11 +54,14 @@ export function AuctionProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     setAuctions([]);
     try {
-      const q = query(collection(db, "auction"));
+      const q = query(
+        collection(db, "auction"), 
+        orderBy("createdAt", "desc")
+      );
       const quarySnapshot = await getDocs(q);
       quarySnapshot.forEach((doc) => {
         const data = doc.data();
-
+        console.log(data);
         const newItem: AuctionItem = {
           id: doc.id,
           name: data.name,
